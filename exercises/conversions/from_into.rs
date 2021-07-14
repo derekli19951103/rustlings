@@ -37,6 +37,24 @@ impl Default for Person {
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let sp:Vec<&str> = s.split(',').collect();
+        if(sp.len()==2){
+        if let Some(name) = sp.get(0) {
+            if let Some(age) = sp.get(1) {
+                let age_number:Option<usize> = age.parse::<usize>().ok();
+                if let Some(a) = age_number {
+                    let name_s = name.to_string();
+                    if(name_s!=""){
+                    return Person{
+                        name:name.to_string(),
+                        age:a
+                    };
+                }
+                }
+            }
+        }
+        }
+        Person::default()
     }
 }
 

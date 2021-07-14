@@ -26,6 +26,14 @@ struct Person {
 impl FromStr for Person {
     type Err = Box<dyn error::Error>;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        let mut sp = s.split(',');
+        while let Some(p) = sp.next() {
+            println!("{}",p);
+        }
+        Ok(Person {
+            name: String::from("John"),
+            age: 30,
+        })
     }
 }
 
