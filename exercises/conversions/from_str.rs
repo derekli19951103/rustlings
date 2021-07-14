@@ -11,6 +11,7 @@ struct Person {
     age: usize,
 }
 
+
 // I AM NOT DONE
 
 // Steps:
@@ -26,19 +27,22 @@ struct Person {
 impl FromStr for Person {
     type Err = Box<dyn error::Error>;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
-        let mut sp = s.split(',');
-        while let Some(p) = sp.next() {
-            println!("{}",p);
-        }
-        Ok(Person {
-            name: String::from("John"),
-            age: 30,
+        let sp:Vec<&str> = s.split(',').collect();
+        let name = sp.get(0).ok_or(Box::new())?;
+        let age = sp.get(1).ok_or(Box::new())?;
+        let age_number = age.parse::<usize>()?;
+        Ok(Person{
+            name:name.to_string(),
+            age:age_number
         })
+                
     }
 }
 
 fn main() {
     let p = "Mark,20".parse::<Person>().unwrap();
+    println!("{:?}", p);
+    let p = "".parse::<Person>().unwrap();
     println!("{:?}", p);
 }
 
