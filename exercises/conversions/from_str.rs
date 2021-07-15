@@ -4,6 +4,7 @@
 // You can read more about it at https://doc.rust-lang.org/std/str/trait.FromStr.html
 use std::error;
 use std::str::FromStr;
+use std::fmt;
 
 #[derive(Debug)]
 struct Person {
@@ -13,6 +14,17 @@ struct Person {
 
 
 // I AM NOT DONE
+
+#[derive(Debug)]
+struct MyError(String);
+
+impl fmt::Display for MyError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+impl error::Error for MyError {}
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -28,13 +40,21 @@ impl FromStr for Person {
     type Err = Box<dyn error::Error>;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
         let sp:Vec<&str> = s.split(',').collect();
-        let name = sp.get(0).ok_or(Box::new())?;
-        let age = sp.get(1).ok_or(Box::new())?;
+        if sp.len() == 2{
+        let name = sp.get(0).ok_or("")?;
+        let age = sp.get(1).ok_or("")?;
         let age_number = age.parse::<usize>()?;
-        Ok(Person{
-            name:name.to_string(),
-            age:age_number
-        })
+        if *name != ""{
+            Ok(Person{
+                name:name.to_string(),
+                age:age_number
+            })
+        } else {
+            Err(Box::new(MyError("No name".into())))
+        }
+    }else{
+        Err(Box::new(MyError("Too long".into())))
+    }
                 
     }
 }
@@ -42,7 +62,7 @@ impl FromStr for Person {
 fn main() {
     let p = "Mark,20".parse::<Person>().unwrap();
     println!("{:?}", p);
-    let p = "".parse::<Person>().unwrap();
+    let p = "".parse::<Person>().is_err();
     println!("{:?}", p);
 }
 
