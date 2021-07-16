@@ -12,6 +12,14 @@
 // Put your function here!
 // fn ..... {
 
+fn calculate_apple_price(num: i16) -> i16 {
+    match num {
+        x if x <= 40 => x * 2,
+        x if x > 40 => x,
+        x => 0
+    }
+}
+
 // Don't modify this function!
 #[test]
 fn verify_test() {
